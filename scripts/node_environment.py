@@ -42,11 +42,6 @@ for path in paths:
                 dependencies[key] = dependencies[key][1:]
     paths_with_ids.append({"id": id, "path": path, "dependencies": dependencies})
 
-dependencies = {}
-
-for path_with_id in paths_with_ids:
-    dependencies.update(path_with_id["dependencies"])
-
 with open("paths2.json", "w") as f:
     f.write(json.dumps(paths_with_ids, indent=4))
 
