@@ -7,7 +7,7 @@ import base64
 system = platform.system()
 
 if system == "Darwin":
-    cmd = "mdfind -onlyin / -name 'node_modules' -type d | grep -v '/node_modules$' | grep -v '/node_modules/' | grep -v '/\\..*/' > paths.json && grep '^/Users' paths.json > tmp_paths.json && rm paths.json"
+    cmd = "mdfind -name node_modules | xargs dirname | grep -v '/node_modules$' | grep -v '/node_modules/' | grep -v '/\..*/' > paths.json && grep '^/Users' paths.json > tmp_paths.json && rm paths.json"
 
 elif system == "Linux":
     cmd = "plocate -r '/node_modules$' | xargs dirname | grep -v '/node_modules$' | grep -v '/node_modules/' | grep -v '/\..*/' > paths.json && grep '^/home' paths.json > tmp_paths.json && rm paths.json"
