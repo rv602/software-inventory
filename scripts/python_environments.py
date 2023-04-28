@@ -30,7 +30,8 @@ def modify_json_file(file_path):
 
 def read_and_associate_paths(json_file):
     with open(json_file, 'r') as f:
-        paths = json.load(f)
+        paths = f.readlines()
+    paths = [path.strip() for path in paths]
     
     result = []
     for path in paths:
