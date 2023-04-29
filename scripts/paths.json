@@ -1,6 +1,6 @@
 [
   {
-    "id": "i4NgPchl",
+    "id": "STVW5nz8",
     "path": "/Users/rajagopalan/Desktop/GSoC",
     "env": "venv",
     "dependencies": [
@@ -43,7 +43,7 @@
     ]
   },
   {
-    "id": "OytZv0mH",
+    "id": "15IJ1nnA",
     "path": "/Users/rajagopalan/Desktop/IA-url",
     "env": "venv",
     "dependencies": [
@@ -105,63 +105,61 @@
     ]
   },
   {
-    "id": "SyVvCAxu",
+    "id": "ea10kfzb",
     "path": "/Users/rajagopalan/Desktop/JUNOEditor",
     "env": "venv",
-    "dependencies": []
+    "dependencies": [
+      "imageio==2.22.0",
+      "imutils==0.5.4",
+      "networkx==2.8.6",
+      "numpy==1.23.3",
+      "opencv-python-headless==4.6.0.66",
+      "packaging==21.3",
+      "Pillow==9.2.0",
+      "pyparsing==3.0.9",
+      "PyQt5==5.15.7",
+      "PyQt5-Qt5==5.15.2",
+      "PyQt5-sip==12.11.0",
+      "PyWavelets==1.4.1",
+      "scikit-image==0.19.3",
+      "scipy==1.9.1",
+      "tifffile==2022.8.12"
+    ]
   },
   {
-    "id": "s2_mg_Lf",
+    "id": "qjtTSJaK",
     "path": "/Users/rajagopalan/Desktop/abhinav",
     "env": "chut",
-    "dependencies": []
+    "dependencies": [
+      "numpy==1.24.3"
+    ]
   },
   {
-    "id": "CCfYbHEJ",
+    "id": "YOoy5M8p",
     "path": "/Users/rajagopalan/Desktop/mesa",
     "env": "venv",
     "dependencies": []
   },
   {
-    "id": "0xxDYjV3",
-    "path": "/Users/rajagopalan/Documents/DSA/s2/graph-ungraded",
-    "env": "venv",
-    "dependencies": []
-  },
-  {
-    "id": "IUtth9uM",
-    "path": "/Users/rajagopalan/Documents/DSA/s2/lab-7",
-    "env": "venv",
-    "dependencies": []
-  },
-  {
-    "id": "QjEmEmQD",
+    "id": "6buAbK8o",
     "path": "/Users/rajagopalan/Documents/JUNOEditor",
     "env": "venv",
-    "dependencies": []
-  },
-  {
-    "id": "Yp2szin2",
-    "path": "/Users/rajagopalan/Documents/S3-ML/lab-1",
-    "env": "env",
-    "dependencies": []
-  },
-  {
-    "id": "SH_o4Nkr",
-    "path": "/Users/rajagopalan/Documents/S3-ML/lab-7",
-    "env": "venv",
-    "dependencies": []
-  },
-  {
-    "id": "GcwP9C_h",
-    "path": "/Users/rajagopalan/Documents/S3-ML/lab-8",
-    "env": "venv",
-    "dependencies": []
-  },
-  {
-    "id": "pmN65Z_n",
-    "path": "/Users/rajagopalan/Documents/yaaar/talawa-api",
-    "env": "venv",
-    "dependencies": []
+    "dependencies": [
+      "imageio==2.22.0",
+      "imutils==0.5.4",
+      "networkx==2.8.6",
+      "numpy==1.23.3",
+      "opencv-python-headless==4.6.0.66",
+      "packaging==21.3",
+      "Pillow==9.2.0",
+      "pyparsing==3.0.9",
+      "PyQt5==5.15.7",
+      "PyQt5-Qt5==5.15.2",
+      "PyQt5-sip==12.11.0",
+      "PyWavelets==1.4.1",
+      "scikit-image==0.19.3",
+      "scipy==1.9.1",
+      "tifffile==2022.8.12"
+    ]
   }
 ]

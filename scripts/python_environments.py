@@ -30,8 +30,7 @@ def modify_json_file(file_path):
 
 def read_and_associate_paths(json_file):
     with open(json_file, 'r') as f:
-        paths = f.readlines()
-    paths = [path.strip() for path in paths]
+        paths = json.load(f)
     
     result = []
     for path in paths:
@@ -52,8 +51,8 @@ def update_json_with_dependencies():
         path = obj["path"]
         env = obj["env"]
         # navigate to the path directory and activate the environment
-        # activate_command = f"source {path}/{env}/bin/activate && pip freeze && deactivate"
-        activate_command = f"source {path}/{env}/bin/activate && pip freeze"
+        activate_command = f"source {path}/{env}/bin/activate && pip3 freeze && deactivate"
+        # activate_command = f"source {path}/{env}/bin/activate && pip3 freeze"
         dependencies = subprocess.run(
             ["bash", "-c", activate_command],
             capture_output=True,
