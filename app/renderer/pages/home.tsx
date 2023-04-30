@@ -1,22 +1,26 @@
-import { shell } from "electron";
-const { exec } = require("child_process");
+import Link from "next/link";
 
+const { exec } = require("child_process");
 export default function Home() {
   const runPythonScript = () => {
-    exec("python3 scripts/python_environments.py", (error, stdout, stderr) => {
-      if (error) {
-        console.error(`exec error: ${error}`);
-        return;
-      }
-      console.log(`stdout: ${stdout}`);
-    });
+    exec(
+      "python3 scripts/python_environments.py && python3 scripts/node_environment.py"
+    );
   };
 
   return (
     <div className="flex justify-center items-center h-screen">
-      <button className="bg-green-300 p-3 rounded-md" onClick={runPythonScript}>
-        Run Python Script
-      </button>
+      <div className="flex flex-col justify-center items-center">
+        <h1 className="text-5xl font-bold p-10">Software Inventory</h1>
+        <Link href="/view">
+          <button
+            className="bg-blue-500 p-3 rounded-md"
+            onClick={() => runPythonScript()}
+          >
+            Get Started
+          </button>
+        </Link>
+      </div>
     </div>
   );
 }
