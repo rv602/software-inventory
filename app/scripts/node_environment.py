@@ -57,8 +57,19 @@ def remove_temp_files():
     os.remove("tmp2_paths.json")
 
 
+def remove_empty_dependencies(json_file_path):
+    with open(json_file_path, 'r') as f:
+        json_data = json.load(f)
+
+    # filter out objects with empty "dependencies" attribute
+    json_data = [obj for obj in json_data if obj.get("dependencies")]
+
+    with open(json_file_path, 'w') as f:
+        json.dump(json_data, f)
+
 if __name__ == "__main__":
     get_node_module_paths()
     parsed_paths = read_and_parse_paths_file()
     write_parsed_paths_file(parsed_paths)
     remove_temp_files()
+    remove_empty_dependencies("paths2.json")
