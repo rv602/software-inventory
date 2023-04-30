@@ -91,8 +91,21 @@ def modify_dependencies_in_file():
     with open('paths.json', 'w') as f:
         json.dump(data, f, indent=4)
 
-get_paths_json()
-read_and_associate_paths('paths.json')
-modify_json_file('paths.json')
-update_json_with_dependencies()
-modify_dependencies_in_file()
+
+def remove_empty_dependencies(json_file_path):
+    with open(json_file_path, 'r') as f:
+        json_data = json.load(f)
+
+    # filter out objects with empty "dependencies" attribute
+    json_data = [obj for obj in json_data if obj.get("dependencies")]
+
+    with open(json_file_path, 'w') as f:
+        json.dump(json_data, f)
+
+if __name__ == "__main__":
+    get_paths_json()
+    read_and_associate_paths('paths.json')
+    modify_json_file('paths.json')
+    update_json_with_dependencies()
+    modify_dependencies_in_file()
+    remove_empty_dependencies('paths.json')
