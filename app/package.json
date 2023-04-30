@@ -1,9 +1,9 @@
 {
   "private": true,
-  "name": "my-nextron-app",
+  "name": "software-inventory",
   "description": "My application description",
   "version": "1.0.0",
-  "author": "Yoshihide Shiono <shiono.yoshihide@gmail.com>",
+  "author": "R.V.Rajagopalan <rajagopalan602@gmail.com>, Abhinav Pandey <meronaamabhinav@gmail.com>",
   "main": "app/background.js",
   "scripts": {
     "dev": "nextron",
@@ -12,8 +12,7 @@
   },
   "dependencies": {
     "electron-serve": "^1.1.0",
-    "electron-store": "^8.1.0",
-    "react-router-dom": "^6.11.0"
+    "electron-store": "^8.1.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.7",
