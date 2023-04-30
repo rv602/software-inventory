@@ -7,14 +7,14 @@ import base64
 system = platform.system()
 
 if system == "Darwin":
-    cmd = "mdfind -name node_modules | xargs dirname | grep -v '/node_modules$' | grep -v '/node_modules/' | grep -v '/\..*/' > paths.json && grep '^/Users' paths.json > tmp_paths.json && rm paths.json"
+    cmd = "mdfind -name node_modules | xargs dirname | grep -v '/node_modules$' | grep -v '/node_modules/' | grep -v '/\..*/' > tmp_paths.json && grep '^/Users' tmp_paths.json > tmp2_paths.json"
 
 elif system == "Linux":
-    cmd = "plocate -r '/node_modules$' | xargs dirname | grep -v '/node_modules$' | grep -v '/node_modules/' | grep -v '/\..*/' > paths.json && grep '^/home' paths.json > tmp_paths.json && rm paths.json"
+    cmd = "plocate -r '/node_modules$' | xargs dirname | grep -v '/node_modules$' | grep -v '/node_modules/' | grep -v '/\..*/' > tmp_paths.json && grep '^/home' tmp_paths.json > tmp2_paths.json"
 
 subprocess.call(cmd, shell=True)
 
-with open("tmp_paths.json", "r") as f:
+with open("tmp2_paths.json", "r") as f:
     paths = f.readlines()
 
 paths = [path.strip() for path in paths]
@@ -46,3 +46,4 @@ with open("paths2.json", "w") as f:
     f.write(json.dumps(paths_with_ids, indent=4))
 
 os.remove("tmp_paths.json")
+os.remove("tmp2_paths.json")

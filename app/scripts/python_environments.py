@@ -66,7 +66,10 @@ def update_json_with_dependencies():
             text=True
         )
         # update the object with the dependencies
-        obj["dependencies"] = dependencies.stdout.splitlines()
+        obj["dependencies"] = {}
+        for line in dependencies.stdout.splitlines():
+            dep, ver = line.split('==')
+            obj["dependencies"][dep] = ver
 
     # write the updated JSON back to the file
     with open("paths.json", "w") as f:
