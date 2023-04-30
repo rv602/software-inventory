@@ -1,6 +1,6 @@
 import Router from "next/router";
+import { exec } from "child_process"
 
-const { exec } = require("child_process");
 export default function Home() {
   const runPythonScript = () => {
     exec(
