@@ -1,20 +1,26 @@
 import { useState } from "react";
+import Router from "next/router";
 import dependenciesData1 from "../../paths2.json";
 import dependenciesData2 from "../../paths.json";
 
 const DependencyTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const allDependencies = [
-    ...dependenciesData1,
-    ...dependenciesData2,
-  ];
+  const allDependencies = [...dependenciesData1, ...dependenciesData2];
   const filteredDependencies = allDependencies.filter((dependency) =>
     dependency.path.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-8">List of Dependencies</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-2xl font-bold">List of Dependencies</h1>
+        <button
+          className="bg-blue-500 p-3 rounded-md"
+          onClick={() => Router.push("/home")}
+        >
+          Back
+        </button>
+      </div>
       <input
         type="text"
         placeholder="Search by path..."
