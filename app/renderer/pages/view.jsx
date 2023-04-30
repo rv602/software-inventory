@@ -2,15 +2,9 @@ import { useState } from "react";
 import dependenciesData1 from "../../paths2.json";
 import dependenciesData2 from "../../paths.json";
 
-type Dependency = {
-  id: string;
-  path: string;
-  dependencies: Record<string, string>;
-};
-
 const DependencyTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const allDependencies: Dependency[] = [
+  const allDependencies = [
     ...dependenciesData1,
     ...dependenciesData2,
   ];
