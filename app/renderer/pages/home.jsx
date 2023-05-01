@@ -1,12 +1,23 @@
+import { useState } from "react";
 import Router from "next/router";
-import { exec } from "child_process"
+import { exec } from "child_process";
+import { TailSpin } from "react-loader-spinner";
 
 export default function Home() {
+  const [loading, setLoading] = useState(false);
   const runPythonScript = () => {
+    setLoading(true);
     exec(
       "python3 scripts/python_environments.py && python3 scripts/node_environment.py",
       (err, stdout, stderr) => {
-        Router.push("/view");
+        if (err) {
+          console.error(err);
+        } else {
+          setTimeout(() => {
+            setLoading(false);
+            Router.push("/view");
+          }, 3000);
+        }
       }
     );
   };
@@ -21,6 +32,18 @@ export default function Home() {
         >
           Get Started
         </button>
+        <div className="p-5">
+          <TailSpin
+            height="40"
+            width="40"
+            color="lightBlue"
+            ariaLabel="tail-spin-loading"
+            radius="1"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={loading}
+          />
+        </div>
       </div>
     </div>
   );

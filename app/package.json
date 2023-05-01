@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "electron-serve": "^1.1.0",
-    "electron-store": "^8.1.0"
+    "electron-store": "^8.1.0",
+    "react-loader-spinner": "^5.3.4"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.7",
