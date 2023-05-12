@@ -2,8 +2,11 @@ import { useState } from "react";
 import Router from "next/router";
 import { exec } from "child_process";
 import { TailSpin } from "react-loader-spinner";
+import dotenv from "dotenv";
+import path from "path";
 
 export default function Home() {
+  dotenv.config({ path: ".env" });
   const [loading, setLoading] = useState(false);
   const runPythonScript = () => {
     setLoading(true);
