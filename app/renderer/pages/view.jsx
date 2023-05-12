@@ -13,35 +13,22 @@ const DependencyTable = () => {
 
   const [responses, setResponses] = useState([]);
   const [dependencies, setDependencies] = useState({
-    bcryptjs: "2.4.3",
-    "body-parser": "1.20.2",
-    cloudinary: "1.35.0",
-    "cookie-parser": "1.4.6",
-    daisyui: "2.51.5",
-    dotenv: "16.0.0",
-    express: "3.0.0",
-    "express-fileupload": "1.4.0",
-    formidable: "2.1.1",
-    jsonwebtoken: "9.0.0",
-    mongoose: "7.0.0",
-    nodemailer: "6.9.1",
-    "react-js-pagination": "3.0.3",
-    "react-slick": "0.29.0",
-    "semantic-ui-css": "2.5.0",
-    "semantic-ui-react": "2.1.4",
-    validator: "13.9.0",
-    nodemon: "2.0.20",
+    react: "16.0.0",
+    aiohttp: "3.8.4",
+    aiosignal: "1.3.1",
+    "async-timeout": "4.0.2",
+    attrs: "22.2.0",
   });
 
   const getAllVulnerabilities = async () => {
     Object.keys(dependencies).forEach(async (key) => {
       const response = await axios
         .get(
-          `https://services.nvd.nist.gov/rest/json/cves/1.0?cpeMatchString=cpe%3A2.3%3Aa%3A%3A${key}%3A${dependencies[key]}&resultsPerPage=1000`,
+          `https://services.nvd.nist.gov/rest/json/cves/1.0?cpeMatchString=cpe%3A2.3%3Aa%3A%3A${key}%3A${dependencies[key]}&resultsPerPage=10`,
           {
             headers: {
               "Content-Type": "application/json",
-              api_key: "f1847978-47a2-47ed-96fa-04bf161e19ec",
+              apiKey: "f1847978-47a2-47ed-96fa-04bf161e19ec",
             },
           }
         )
@@ -57,8 +44,8 @@ const DependencyTable = () => {
   };
 
   useEffect(() => {
-    getAllVulnerabilities();
-  }, [responses]);
+    // getAllVulnerabilities();
+  }, []);
 
   return (
     <div className="p-8">
@@ -91,12 +78,15 @@ const DependencyTable = () => {
               <th className="px-4 py-2 border border-gray-500 text-center">
                 Dependencies
               </th>
+              <th className="px-4 py-2 border border-gray-500 text-center">
+                Vulnerabilties
+              </th>
             </tr>
           </thead>
           <tbody>
             {filteredDependencies.map((dependency) => (
               <tr key={dependency.id}>
-                <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-center text-gray-800">
+                <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800">
                   {dependency.path}
                 </td>
                 <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800">
@@ -110,38 +100,11 @@ const DependencyTable = () => {
                     )}
                   </ul>
                 </td>
+                <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800"></td>
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
-      <div>
-        {responses.length > 0 ? (
-          <>
-            <p>
-              {responses.map((response) => {
-                return (
-                  <>
-                    <p>
-                      {response.result.CVE_Items.map((cve) => {
-                        return (
-                          <>
-                            <p>{cve.cve.CVE_data_meta.ID}</p>
-                            <p>
-                              {cve.cve.description.description_data[0].value}
-                            </p>
-                          </>
-                        );
-                      })}
-                    </p>
-                  </>
-                );
-              })}
-            </p>
-          </>
-        ) : (
-          ""
-        )}
       </div>
     </div>
   );
