@@ -10,7 +10,7 @@ def get_paths_json():
     if system == "Darwin":  # Mac
         cmd = "mdfind -name activate | grep '/bin/activate$' | xargs dirname | xargs dirname | grep -v '/\..*/' | grep '^/Users' | sort -u | jq -R . | jq -s 'unique' > paths.json"
     elif system == "Linux":  # Linux
-        cmd = "locate activate | egrep '/bin/activate$' | xargs -r egrep -l nondestructive 2>/dev/null | xargs -I {} dirname {} | xargs -I {} dirname {} > paths.json"
+        cmd = "locate activate | egrep '/bin/activate$' | xargs -r egrep -l nondestructive 2>/dev/null | xargs -I {} dirname {} | xargs -I {} dirname {} | grep '/home' > paths.json"
 
     subprocess.call(cmd, shell=True)
 
