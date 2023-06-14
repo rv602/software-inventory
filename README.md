@@ -1,4 +1,3 @@
-<p align="center"><img src="https://i.imgur.com/a9QWW0v.png"></p>
 
 ## Usage
 
@@ -18,8 +17,6 @@ $ pnpx create-nextron-app my-app --example with-tailwindcss
 ### Install Dependencies
 
 ```
-$ cd my-app
-
 # using yarn or npm
 $ yarn (or `npm install`)
 
