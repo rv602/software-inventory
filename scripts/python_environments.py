@@ -8,9 +8,9 @@ def get_paths_json():
     system = platform.system()
 
     if system == "Darwin":  # Mac
-        cmd = "mdfind -name activate | egrep /bin/activate$ | xargs -o egrep -l nondestructive 2>/dev/null | xargs -L 1 dirname | xargs -L 1 dirname | sort -u | jq -R . | jq -s 'unique' > paths.json"
+        cmd = "mdfind -name activate | grep '/bin/activate$' | xargs dirname | xargs dirname | grep -v '/\..*/' | grep '^/Users' | sort -u | jq -R . | jq -s 'unique' > paths.json"
     elif system == "Linux":  # Linux
-        cmd = "locate activate | egrep '/bin/activate$' | xargs -r egrep -l nondestructive 2>/dev/null | xargs -I {} dirname {} | xargs -I {} dirname {} > paths.json"
+        cmd = "locate activate | egrep '/bin/activate$' | xargs -r egrep -l nondestructive 2>/dev/null | xargs -I {} dirname {} | xargs -I {} dirname {} | grep '/home' > paths.json"
 
     subprocess.call(cmd, shell=True)
 
@@ -38,7 +38,7 @@ def read_and_associate_paths(json_file):
         with open(json_file, 'r') as f:
             paths = f.readlines()
         paths = [path.strip() for path in paths]
-    
+
     result = []
     for path in paths:
         id = base64.urlsafe_b64encode(os.urandom(6)).decode()
@@ -72,7 +72,40 @@ def update_json_with_dependencies():
     with open("paths.json", "w") as f:
         json.dump(json_data, f)
 
-get_paths_json()
-read_and_associate_paths('paths.json')
-modify_json_file('paths.json')
-update_json_with_dependencies()
+
+def modify_dependencies_in_file():
+    with open('paths.json', 'r') as f:
+        data = json.load(f)
+    
+    for item in data:
+        if 'dependencies' in item:
+            dependencies_dict = {}
+            for dependency in item['dependencies']:
+                dependency_parts = dependency.split('==')
+                if len(dependency_parts) >= 2:
+                    dependencies_dict[dependency_parts[0]] = dependency_parts[1]
+
+                # dependencies_dict[dependency_parts[0]] = dependency_parts[1]
+            item['dependencies'] = dependencies_dict
+    
+    with open('paths.json', 'w') as f:
+        json.dump(data, f, indent=4)
+
+
+def remove_empty_dependencies(json_file_path):
+    with open(json_file_path, 'r') as f:
+        json_data = json.load(f)
+
+    # filter out objects with empty "dependencies" attribute
+    json_data = [obj for obj in json_data if obj.get("dependencies")]
+
+    with open(json_file_path, 'w') as f:
+        json.dump(json_data, f)
+
+if __name__ == "__main__":
+    get_paths_json()
+    read_and_associate_paths('paths.json')
+    modify_json_file('paths.json')
+    update_json_with_dependencies()
+    modify_dependencies_in_file()
+    remove_empty_dependencies('paths.json')

@@ -1,27 +1,38 @@
-# Software-inventory
+<p align="center"><img src="https://i.imgur.com/a9QWW0v.png"></p>
 
-### Installation:
+## Usage
 
-1. Clone the repository:
-
-```
-git clone https://github.com/rv602/software-inventory.git
-```
-
-2. Change directory:
+### Create an App
 
 ```
-cd app/
+# with npx
+$ npx create-nextron-app my-app --example with-tailwindcss
+
+# with yarn
+$ yarn create nextron-app my-app --example with-tailwindcss
+
+# with pnpx
+$ pnpx create-nextron-app my-app --example with-tailwindcss
 ```
 
-3. Install the dependencies:
+### Install Dependencies
 
 ```
-npm install
+$ cd my-app
+
+# using yarn or npm
+$ yarn (or `npm install`)
+
+# using pnpm
+$ pnpm install --shamefully-hoist
 ```
 
-4. Run the application:
+### Use it
 
 ```
-npm run dev
+# development mode
+$ yarn dev (or `npm run dev` or `pnpm run dev`)
+
+# production build
+$ yarn build (or `npm run build` or `pnpm run build`)
 ```
