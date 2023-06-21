@@ -1,35 +1,18 @@
+## Installation guide
 
-## Usage
+### 1. Install the required packages
 
-### Create an App
+```npm i```
 
-```
-# with npx
-$ npx create-nextron-app my-app --example with-tailwindcss
+### 2. Create a .env file
 
-# with yarn
-$ yarn create nextron-app my-app --example with-tailwindcss
+```cp .env.example .env```
 
-# with pnpx
-$ pnpx create-nextron-app my-app --example with-tailwindcss
-```
+In the .env file, add the url of the FastAPI server
+(http://127.0.0.1:8000) or the url of the deployed server.
 
-### Install Dependencies
+FastAPI Repository linked <a href='https://github.com/rv602/software-inventory-api'>here</a>
 
-```
-# using yarn or npm
-$ yarn (or `npm install`)
+### 3. Run the project
 
-# using pnpm
-$ pnpm install --shamefully-hoist
-```
-
-### Use it
-
-```
-# development mode
-$ yarn dev (or `npm run dev` or `pnpm run dev`)
-
-# production build
-$ yarn build (or `npm run build` or `pnpm run build`)
-```
+```npm run dev```
