@@ -1,45 +1,45 @@
 import { useState, useEffect } from "react";
 import Router from "next/router";
 import { TailSpin } from "react-loader-spinner";
+import { all } from "axios";
 
 export default function DependencyTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
-  const [allDependencies, setAllDependencies] = [{}];
+  const [allDependencies, setAllDependencies] = useState([]);
 
   useEffect(() => {
-    const fetchData = (url) => {
-      setLoading(true);
+    setLoading(true);
 
-      const requestOptions = {
-        method: 'GET',
-        redirect: 'follow'
-      };
-
-      fetch(url, requestOptions)
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-          setLoading(false);
-        })
-        .catch(error => {
-          console.log('error', error);
-          setLoading(false);
-        });
+    const requestOptions = {
+      method: "GET",
+      redirect: "follow",
     };
 
-    const getPythonData = () => {
-      const pythonUrl = `${process.env.BACKEND_URL}/python-environments`;
-      fetchData(pythonUrl);
-    };
+    const urls = [
+      `${process.env.BACKEND_URL}/python-environments`,
+      `${process.env.BACKEND_URL}/node-environments`,
+    ];
 
-    const getJsData = () => {
-      const jsUrl = `${process.env.BACKEND_URL}/node-environments`;
-      fetchData(jsUrl);
-    };
-
-    getPythonData();
-    getJsData();
+    Promise.all([
+      fetch(urls[0], requestOptions),
+      fetch(urls[1], requestOptions),
+    ])
+      .then((responses) => {
+        return Promise.all(
+          responses.map((response) => {
+            return response.json();
+          })
+        );
+      })
+      .then((data) => {
+        setAllDependencies(data[0].concat(data[1]));
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
   }, []);
 
   return (
@@ -55,20 +55,18 @@ export default function DependencyTable() {
           </button>
         </div>
         {loading ? (
-          (
-            <>
-              <TailSpin
-                height="40"
-                width="40"
-                color="lightBlue"
-                ariaLabel="tail-spin-loading"
-                radius="1"
-                wrapperStyle={{}}
-                wrapperClass=""
-                visible={loading}
-              />
-            </>
-          )
+          <>
+            <TailSpin
+              height="40"
+              width="40"
+              color="lightBlue"
+              ariaLabel="tail-spin-loading"
+              radius="1"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={loading}
+            />
+          </>
         ) : (
           <>
             <input
@@ -97,9 +95,25 @@ export default function DependencyTable() {
                   </tr>
                 </thead>
                 <tbody>
-                  <td>update</td>
-                  <td>from</td>
-                  <td>FastAPI</td>
+                  {allDependencies.map((dependency) => (
+                    <tr key={dependency.id}>
+                      <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800">
+                        {dependency.path}
+                      </td>
+                      <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800">
+                        <ul>
+                          {Object.entries(dependency.dependencies).map(
+                            ([name, version]) => (
+                              <li key={name}>
+                                {name} : {version}
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </td>
+                      <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800"></td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -108,4 +122,4 @@ export default function DependencyTable() {
       </div>
     </>
   );
-};
+}
