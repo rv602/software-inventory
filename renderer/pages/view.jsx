@@ -33,6 +33,7 @@ export default function DependencyTable() {
         );
       })
       .then((data) => {
+        console.log(data);
         setAllDependencies(data[0].concat(data[1]));
         setLoading(false);
       })
@@ -101,15 +102,19 @@ export default function DependencyTable() {
                         {dependency.path}
                       </td>
                       <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800">
-                        <ul>
-                          {Object.entries(dependency.dependencies).map(
-                            ([name, version]) => (
-                              <li key={name}>
-                                {name} : {version}
-                              </li>
-                            )
-                          )}
-                        </ul>
+                        {dependency.dependencies ? (
+                          <ul>
+                            {Object.entries(dependency.dependencies).map(
+                              ([name, version]) => (
+                                <li key={name}>
+                                  {name} : {version}
+                                </li>
+                              )
+                            )}
+                          </ul>
+                        ) : (
+                          <p>No dependencies found.</p>
+                        )}
                       </td>
                       <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800"></td>
                     </tr>
