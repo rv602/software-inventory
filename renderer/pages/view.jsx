@@ -88,35 +88,45 @@ export default function DependencyTable() {
                       Project Name
                     </th>
                     <th className="px-4 py-2 border border-gray-500 text-center">
-                      Dependencies
+                      Vulnerabilties
                     </th>
                     <th className="px-4 py-2 border border-gray-500 text-center">
-                      Vulnerabilties
+                      Severity
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {allDependencies.map((dependency) => (
-                    <tr key={dependency.id}>
+                    <tr key={dependency.ID}>
                       <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800">
-                        {dependency.path}
+                        {dependency.Path}
                       </td>
                       <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800">
-                        {dependency.dependencies ? (
+                        {dependency.Vulnerabilities ? (
                           <ul>
-                            {Object.entries(dependency.dependencies).map(
-                              ([name, version]) => (
-                                <li key={name}>
-                                  {name} : {version}
-                                </li>
-                              )
-                            )}
+                            {dependency.Vulnerabilities.map((Vulnerbility) => (
+                              <li key={Vulnerbility.Name}>
+                                {Vulnerbility.Name}
+                              </li>
+                            ))}
                           </ul>
                         ) : (
                           <p>No dependencies found.</p>
                         )}
                       </td>
-                      <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800"></td>
+                      <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800">
+                        {dependency.Vulnerabilities ? (
+                          <ul>
+                            {dependency.Vulnerabilities.map((Vulnerbility) => (
+                              <li key={Vulnerbility.Name}>
+                                {Vulnerbility.Severity}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p>No dependencies found.</p>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
