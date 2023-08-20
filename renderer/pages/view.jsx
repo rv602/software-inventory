@@ -66,112 +66,90 @@ export default function DependencyTable() {
 
   return (
     <>
-      <div className="p-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold">List of Dependencies</h1>
-          <div>
-            <button
-              className="bg-blue-500 p-3 rounded-md"
-              onClick={() => Router.push("/home")}
-            >
-              Back
-            </button>
-            <button
-              className="bg-blue-500 p-3 rounded-md ml-4"
-              onClick={() => fetchApi(true)}
-            >
-              Refresh
-            </button>
-          </div>
-        </div>
+      <div>
         {loading ? (
-          <>
-            <TailSpin
-              height="40"
-              width="40"
-              color="lightBlue"
-              ariaLabel="tail-spin-loading"
-              radius="1"
-              wrapperStyle={{}}
-              wrapperClass=""
-              visible={loading}
-            />
-          </>
+          <>Loading...</>
         ) : (
           <>
-            <input
-              type="text"
-              placeholder="Search by path..."
-              className="w-full p-4 mb-8 rounded-md bg-gray-200 text-center text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <div className="overflow-x-auto">
-              {filteredDependencies.length === 0 ? (
-                // Display message when no dependencies match the search term
-                <p className="text-center text-gray-800">
-                  No such project found.
-                </p>
-              ) : (
-                // Display the table when there are filtered dependencies
-                <table className="w-full table-auto border-collapse">
+            <div className="w-full sm:p-6 ">
+              <div className="px-4 md:px-10 py-4 md:py-7 bg-gray-100 rounded-tl-lg rounded-tr-lg">
+                <div className="sm:flex items-center justify-between">
+                  <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold leading-normal text-gray-800">
+                    Projects
+                  </p>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Search by path..."
+                    className="w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  ></input>
+                  <div>
+                    <button
+                      className="inline-flex sm:ml-3 mt-4 sm:mt-0 items-start justify-start px-6 py-3 bg-blue-500 hover:bg-blue-600 focus:outline-none rounded"
+                      onClick={() => fetchApi(true)}
+                    >
+                      <p className="text-sm font-medium leading-none text-white">
+                        Refresh
+                      </p>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white shadow p-4 md:px-10 pt-4 md:pt-7 pb-5 overflow-y-auto h-[70vh]">
+                <table className="w-full whitespace-nowrap">
                   <thead>
-                    <tr className="bg-gray-200">
-                      <th
-                        className="px-4 py-2 border border-gray-500 text-center"
-                        style={{ minWidth: "300px" }}
-                      >
-                        Project Name
+                    <tr className="h-16 w-full text-sm leading-none text-gray-800">
+                      <th className="font-normal text-left px-2">Project</th>
+                      <th className="font-normal text-left px-6">
+                        <div className="flex justify-center">Issues</div>
                       </th>
-                      <th className="px-4 py-2 border border-gray-500 text-center">
-                        Vulnerabilities
-                      </th>
-                      <th className="px-4 py-2 border border-gray-500 text-center">
-                        Severity
+                      <th className="font-normal text-left px-6">
+                        <div className="flex justify-center">Total</div>
                       </th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody className="w-full">
                     {filteredDependencies.map((dependency) => (
-                      <tr key={dependency.ID}>
-                        <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800">
-                          {dependency.Path}
+                      <tr
+                        key={dependency.ID}
+                        className="h-20 text-sm leading-none text-gray-800 bg-white hover:bg-gray-100 border-b border-t border-gray-100"
+                      >
+                        <td className="px-2 cursor-pointer">
+                          <div className="flex items-center">
+                            <div className="w-10 h-10">
+                              <img
+                                className="w-full h-full"
+                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png"
+                                alt="Logo"
+                              />
+                            </div>
+                            <div className="px-2">
+                              <p className="font-medium">{dependency.Path}</p>
+                            </div>
+                          </div>
                         </td>
-                        <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800">
-                          {dependency.Vulnerabilities ? (
-                            <ul>
-                              {dependency.Vulnerabilities.map(
-                                (Vulnerability) => (
-                                  <li key={Vulnerability.Name}>
-                                    {Vulnerability.Name}
-                                  </li>
-                                )
-                              )}
-                            </ul>
-                          ) : (
-                            <p>No dependencies found.</p>
-                          )}
+                        <td className="px-6">
+                          <div className="flex justify-center">
+                            <p className="text-sm font-medium leading-none text-gray-800">
+                              M | H | C
+                            </p>
+                          </div>
                         </td>
-                        <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800">
-                          {dependency.Vulnerabilities ? (
-                            <ul>
-                              {dependency.Vulnerabilities.map(
-                                (Vulnerability) => (
-                                  <li key={Vulnerability.Name}>
-                                    {Vulnerability.Severity}
-                                  </li>
-                                )
-                              )}
-                            </ul>
-                          ) : (
-                            <p>No dependencies found.</p>
-                          )}
+                        <td className="px-6">
+                          <div className="flex justify-center">
+                            <p className="text-sm leading-3 text-gray-800 mt-2">
+                              {dependency.Vulnerabilities.length}
+                            </p>
+                          </div>
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-              )}
+              </div>
             </div>
           </>
         )}
