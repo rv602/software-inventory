@@ -1,23 +1,25 @@
 import { useState, useEffect } from "react";
 import Router from "next/router";
 import { TailSpin } from "react-loader-spinner";
-// import { all } from "axios";
 
 export default function DependencyTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [allDependencies, setAllDependencies] = useState([]);
 
+  // Fetch data when the component mounts
   useEffect(() => {
     const refresh = false;
     fetchApi(refresh);
   }, []);
 
+  // Function to fetch data from the API
   const fetchApi = (refresh) => {
     setLoading(true);
     const storedData = localStorage.getItem("apiData");
 
     if (storedData && !refresh) {
+      // Use cached data if available
       setAllDependencies(JSON.parse(storedData));
       setLoading(false);
     } else {
@@ -56,6 +58,11 @@ export default function DependencyTable() {
         });
     }
   };
+
+  // Filter the dependencies based on the search term
+  const filteredDependencies = allDependencies.filter((dependency) =>
+    dependency.Path.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <>
@@ -100,59 +107,71 @@ export default function DependencyTable() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <div className="overflow-x-auto">
-              <table className="w-full table-auto border-collapse">
-                <thead>
-                  <tr className="bg-gray-200">
-                    <th
-                      className="px-4 py-2 border border-gray-500 text-center"
-                      style={{ minWidth: "300px" }}
-                    >
-                      Project Name
-                    </th>
-                    <th className="px-4 py-2 border border-gray-500 text-center">
-                      Vulnerabilties
-                    </th>
-                    <th className="px-4 py-2 border border-gray-500 text-center">
-                      Severity
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {allDependencies.map((dependency) => (
-                    <tr key={dependency.ID}>
-                      <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800">
-                        {dependency.Path}
-                      </td>
-                      <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800">
-                        {dependency.Vulnerabilities ? (
-                          <ul>
-                            {dependency.Vulnerabilities.map((Vulnerbility) => (
-                              <li key={Vulnerbility.Name}>
-                                {Vulnerbility.Name}
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <p>No dependencies found.</p>
-                        )}
-                      </td>
-                      <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800">
-                        {dependency.Vulnerabilities ? (
-                          <ul>
-                            {dependency.Vulnerabilities.map((Vulnerbility) => (
-                              <li key={Vulnerbility.Name}>
-                                {Vulnerbility.Severity}
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <p>No dependencies found.</p>
-                        )}
-                      </td>
+              {filteredDependencies.length === 0 ? (
+                // Display message when no dependencies match the search term
+                <p className="text-center text-gray-800">
+                  No such project found.
+                </p>
+              ) : (
+                // Display the table when there are filtered dependencies
+                <table className="w-full table-auto border-collapse">
+                  <thead>
+                    <tr className="bg-gray-200">
+                      <th
+                        className="px-4 py-2 border border-gray-500 text-center"
+                        style={{ minWidth: "300px" }}
+                      >
+                        Project Name
+                      </th>
+                      <th className="px-4 py-2 border border-gray-500 text-center">
+                        Vulnerabilities
+                      </th>
+                      <th className="px-4 py-2 border border-gray-500 text-center">
+                        Severity
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {filteredDependencies.map((dependency) => (
+                      <tr key={dependency.ID}>
+                        <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800">
+                          {dependency.Path}
+                        </td>
+                        <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800">
+                          {dependency.Vulnerabilities ? (
+                            <ul>
+                              {dependency.Vulnerabilities.map(
+                                (Vulnerability) => (
+                                  <li key={Vulnerability.Name}>
+                                    {Vulnerability.Name}
+                                  </li>
+                                )
+                              )}
+                            </ul>
+                          ) : (
+                            <p>No dependencies found.</p>
+                          )}
+                        </td>
+                        <td className="px-4 py-2 border border-gray-500 text-sm font-medium text-gray-800">
+                          {dependency.Vulnerabilities ? (
+                            <ul>
+                              {dependency.Vulnerabilities.map(
+                                (Vulnerability) => (
+                                  <li key={Vulnerability.Name}>
+                                    {Vulnerability.Severity}
+                                  </li>
+                                )
+                              )}
+                            </ul>
+                          ) : (
+                            <p>No dependencies found.</p>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
           </>
         )}
