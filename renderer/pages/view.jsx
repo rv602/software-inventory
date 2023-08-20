@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Router from "next/router";
 import { TailSpin } from "react-loader-spinner";
-import { all } from "axios";
+// import { all } from "axios";
 
 export default function DependencyTable() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -9,51 +9,73 @@ export default function DependencyTable() {
   const [allDependencies, setAllDependencies] = useState([]);
 
   useEffect(() => {
-    setLoading(true);
-
-    const requestOptions = {
-      method: "GET",
-      redirect: "follow",
-    };
-
-    const urls = [
-      `${process.env.BACKEND_URL}/python-environments`,
-      `${process.env.BACKEND_URL}/node-environments`,
-    ];
-
-    Promise.all([
-      fetch(urls[0], requestOptions),
-      fetch(urls[1], requestOptions),
-    ])
-      .then((responses) => {
-        return Promise.all(
-          responses.map((response) => {
-            return response.json();
-          })
-        );
-      })
-      .then((data) => {
-        console.log(data);
-        setAllDependencies(data[0].concat(data[1]));
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        setLoading(false);
-      });
+    const refresh = false;
+    fetchApi(refresh);
   }, []);
+
+  const fetchApi = (refresh) => {
+    setLoading(true);
+    const storedData = localStorage.getItem("apiData");
+
+    if (storedData && !refresh) {
+      setAllDependencies(JSON.parse(storedData));
+      setLoading(false);
+    } else {
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      };
+
+      const urls = [
+        `${process.env.BACKEND_URL}/python-environments`,
+        `${process.env.BACKEND_URL}/node-environments`,
+      ];
+
+      Promise.all([
+        fetch(urls[0], requestOptions),
+        fetch(urls[1], requestOptions),
+      ])
+        .then((responses) => {
+          return Promise.all(
+            responses.map((response) => {
+              return response.json();
+            })
+          );
+        })
+        .then((data) => {
+          console.log(data);
+          localStorage.setItem(
+            "apiData",
+            JSON.stringify(data[0].concat(data[1]))
+          );
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setLoading(false);
+        });
+    }
+  };
 
   return (
     <>
       <div className="p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-bold">List of Dependencies</h1>
-          <button
-            className="bg-blue-500 p-3 rounded-md"
-            onClick={() => Router.push("/home")}
-          >
-            Back
-          </button>
+          <div>
+            <button
+              className="bg-blue-500 p-3 rounded-md"
+              onClick={() => Router.push("/home")}
+            >
+              Back
+            </button>
+            <button
+              className="bg-blue-500 p-3 rounded-md ml-4"
+              onClick={() => fetchApi(true)}
+            >
+              Refresh
+            </button>
+          </div>
         </div>
         {loading ? (
           <>
