@@ -98,7 +98,7 @@ export default function DependencyTable() {
                   </div>
                 </div>
               </div>
-              <div className="bg-white shadow p-4 md:px-10 pt-4 md:pt-7 pb-5 overflow-y-auto h-[70vh]">
+              <div className="bg-white shadow p-4 md:px-10 pt-4 md:pt-7 pb-5 overflow-y-auto h-[70vh] xl:h-[80vh]">
                 <table className="w-full whitespace-nowrap">
                   <thead>
                     <tr className="h-16 w-full text-sm leading-none text-gray-800">
@@ -122,7 +122,11 @@ export default function DependencyTable() {
                             <div className="w-10 h-10">
                               <img
                                 className="w-full h-full"
-                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png"
+                                src={
+                                  dependency.Env
+                                    ? "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png"
+                                    : "https://cdn-icons-png.flaticon.com/512/5968/5968322.png"
+                                }
                                 alt="Logo"
                               />
                             </div>
