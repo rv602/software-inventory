@@ -64,6 +64,14 @@ export default function DependencyTable() {
     dependency.Path.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Pass props
+  const navigateToProjectPage = (dependency) => {
+    Router.push({
+      pathname: `/project/${dependency.ID}`,
+      query: { dependency: JSON.stringify(dependency) },
+    });
+  };
+
   return (
     <>
       <div>
@@ -131,7 +139,14 @@ export default function DependencyTable() {
                               />
                             </div>
                             <div className="px-2">
-                              <p className="font-medium">{dependency.Path}</p>
+                              <p
+                                className="font-medium"
+                                onClick={() =>
+                                  navigateToProjectPage(dependency)
+                                }
+                              >
+                                {dependency.Path}
+                              </p>
                             </div>
                           </div>
                         </td>
