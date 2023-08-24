@@ -6,6 +6,7 @@ export default function DependencyTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [allDependencies, setAllDependencies] = useState([]);
+  const [lastRefreshedAt, setLastRefreshedAt] = useState([]);
 
   // Fetch data when the component mounts
   useEffect(() => {
@@ -15,49 +16,59 @@ export default function DependencyTable() {
 
   // Function to fetch data from the API
   const fetchApi = (refresh) => {
-    setLoading(true);
-    const storedData = localStorage.getItem("apiData");
+  setLoading(true);
+  const storedData = localStorage.getItem("apiData");
 
-    if (storedData && !refresh) {
-      // Use cached data if available
-      setAllDependencies(JSON.parse(storedData));
-      setLoading(false);
-    } else {
-      const requestOptions = {
-        method: "GET",
-        redirect: "follow",
-      };
+  if (storedData && !refresh) {
+    // Use cached data if available
+    const dependencies = JSON.parse(storedData);
+    const lastRefreshed = new Date(storedData.substring(0, 10));
+    setAllDependencies(dependencies);
+    setLastRefreshedAt(lastRefreshed);
+    setLoading(false);
+  } else {
+    const requestOptions = {
+      method: "GET",
+      redirect: "follow",
+    };
 
-      const urls = [
-        `${process.env.BACKEND_URL}/python-environments`,
-        `${process.env.BACKEND_URL}/node-environments`,
-      ];
+    const urls = [
+      `${process.env.BACKEND_URL}/python-environments`,
+      `${process.env.BACKEND_URL}/node-environments`,
+    ];
 
-      Promise.all([
-        fetch(urls[0], requestOptions),
-        fetch(urls[1], requestOptions),
-      ])
-        .then((responses) => {
-          return Promise.all(
-            responses.map((response) => {
-              return response.json();
-            })
-          );
-        })
-        .then((data) => {
-          console.log(data);
-          localStorage.setItem(
-            "apiData",
-            JSON.stringify(data[0].concat(data[1]))
-          );
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.log(error);
-          setLoading(false);
-        });
-    }
-  };
+    Promise.all([
+      fetch(urls[0], requestOptions),
+      fetch(urls[1], requestOptions),
+    ])
+      .then((responses) => {
+        return Promise.all(
+          responses.map((response) => {
+            return response.json();
+          })
+        );
+      })
+      .then((data) => {
+        const dependencies = data[0].concat(data[1]);
+        const lastRefreshed = new Date();
+        localStorage.setItem(
+          "apiData",
+          JSON.stringify(dependencies)
+        );
+        localStorage.setItem(
+          "lastRefreshedAt",
+          lastRefreshed.toLocaleString()
+        );
+        setAllDependencies(dependencies);
+        setLastRefreshedAt(lastRefreshed);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
+  }
+};
 
   // Filter the dependencies based on the search term
   const filteredDependencies = allDependencies.filter((dependency) =>
@@ -94,15 +105,20 @@ export default function DependencyTable() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   ></input>
-                  <div>
+                  <div className="flex flex-col items-center">
                     <button
                       className="inline-flex sm:ml-3 mt-4 sm:mt-0 items-start justify-start px-6 py-3 bg-blue-500 hover:bg-blue-600 focus:outline-none rounded"
                       onClick={() => fetchApi(true)}
                     >
                       <p className="text-sm font-medium leading-none text-white">
                         Refresh
-                      </p>
+                      </p>             
                     </button>
+                    {lastRefreshedAt && (
+            		<p className="mt-2 text-sm text-gray-500">
+              		Last refreshed: {lastRefreshedAt.toLocaleString()}
+            		</p>
+          		)}
                   </div>
                 </div>
               </div>
