@@ -20,7 +20,6 @@ export default function DependencyTable() {
   // Function to fetch data from the API
   const fetchApi = (refresh) => {
     setLoading(true);
-    console.log("hi");
     const storedData = localStorage.getItem("apiData");
 
     if (storedData && !refresh) {
@@ -31,6 +30,7 @@ export default function DependencyTable() {
       setLastRefreshedAt(lastRefreshed);
       setLoading(false);
     } else {
+      console.log("Fetching data from API");
       const requestOptions = {
         method: "GET",
         redirect: "follow",
@@ -177,30 +177,49 @@ export default function DependencyTable() {
                             </div>
                           </div>
                         </td>
-                        <td className="px-6">
-			  <div className="flex justify-center">
-			    <div className="severity-count flex">
-			      <div style={{ backgroundColor: '#be0000', padding: '8px', width: '24px' }} className="count-box">
-				<span style={{ color: 'white', marginLeft: '0px' }} className="severity-label">C</span>
-			      </div>
-			      <div style={{ backgroundColor: '#ffd7d4', padding: '8px' }} className="critical-count">
-				{dependency.Vulnerabilities.filter((v) => v.Severity === "critical").length}
-			      </div>
-			      <div style={{ backgroundColor: '#e23a00', padding: '8px', marginLeft: '8px', width: '24px'}} className="count-box">
-				<span style={{ color: 'white', marginLeft: '0px' }} className="severity-label">H</span>
-			      </div>
-			      <div style={{ backgroundColor: '#fedbc9', padding: '8px' }} className="high-count">
-				{dependency.Vulnerabilities.filter((v) => v.Severity === "high").length}
-			      </div>
-			      <div style={{ backgroundColor: '#e57f01', padding: '8px', marginLeft: '8px', width: '24px' }} className="count-box">
-				<span style={{ color: 'white', marginLeft: '0px' }} className="severity-label">M</span>
-			      </div>
-			      <div style={{ backgroundColor: '#ffeacb', padding: '8px' }} className="moderate-count">
-				{dependency.Vulnerabilities.filter((v) => v.Severity === "moderate").length}
-			      </div>
-			    </div>
-			  </div>
-			</td>
+                        <td class="px-6">
+                          <div class="flex justify-center">
+                            <div class="severity-count flex">
+                              <div class="count-box bg-[#be0000] p-[8px] w-[24px]">
+                                <span class="severity-label text-white ml-0">
+                                  C
+                                </span>
+                              </div>
+                              <div class="critical-count bg-[#ffd7d4] p-[8px]">
+                                {
+                                  dependency.Vulnerabilities.filter(
+                                    (v) => v.Severity === "critical"
+                                  ).length
+                                }
+                              </div>
+                              <div class="count-box bg-[#e23a00] p-[8px] w-[24px]">
+                                <span class="severity-label text-white ml-0">
+                                  H
+                                </span>
+                              </div>
+                              <div class="high-count bg-[#fedbc9] p-[8px]">
+                                {
+                                  dependency.Vulnerabilities.filter(
+                                    (v) => v.Severity === "high"
+                                  ).length
+                                }
+                              </div>
+                              <div class="count-box bg-[#e57f01] p-[8px] w-[24px]">
+                                <span class="severity-label text-white ml-0">
+                                  M
+                                </span>
+                              </div>
+                              <div class="moderate-count bg-[#ffeacb] p-[8px]">
+                                {
+                                  dependency.Vulnerabilities.filter(
+                                    (v) => v.Severity === "moderate"
+                                  ).length
+                                }
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+
                         <td className="px-6">
                           <div className="flex justify-center">
                             <p className="text-sm leading-3 text-gray-800 mt-2">
