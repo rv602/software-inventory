@@ -41,6 +41,9 @@ const ProjectPage = () => {
   return (
     <div className="container mx-auto mt-6 p-4">
       <h1 className="text-2xl font-semibold mb-4">Project Details</h1>
+      <button class="bg-blue-500 p-3 rounded-md float-right"
+           onClick={() => router.back()}>Go Back</button>
+
       <div className="bg-white rounded-lg shadow-md p-6">
         <p>
           <span className="font-semibold">ID:</span> {dependencyObj.ID}
