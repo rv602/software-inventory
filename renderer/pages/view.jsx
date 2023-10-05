@@ -18,58 +18,64 @@ export default function DependencyTable() {
   }, []);
 
   // Function to fetch data from the API
-  const fetchApi = (refresh) => {
-    setLoading(true);
-    const storedData = localStorage.getItem("apiData");
+const fetchApi = (refresh) => {
+  setLoading(true);
+  const storedData = localStorage.getItem("apiData");
 
-    if (storedData && !refresh) {
-      // Use cached data if available
-      const dependencies = JSON.parse(storedData);
-      const lastRefreshed = new Date(storedData.substring(0, 10));
-      setAllDependencies(dependencies);
-      setLastRefreshedAt(lastRefreshed);
-      setLoading(false);
+  if (storedData && !refresh) {
+    // Use cached data if available
+    const dependencies = JSON.parse(storedData);
+    const lastRefreshedAtString = localStorage.getItem("lastRefreshedAt");
+
+    const lastRefreshedAt = new Date(lastRefreshedAtString);
+
+    // Check for an invalid date
+    if (isNaN(lastRefreshedAt)) {
+      console.log("Invalid date format");
     } else {
-      console.log("Fetching data from API");
-      const requestOptions = {
-        method: "GET",
-        redirect: "follow",
-      };
-
-      const urls = [
-        `${process.env.BACKEND_URL}/python-environments`,
-        `${process.env.BACKEND_URL}/node-environments`,
-      ];
-
-      Promise.all([
-        fetch(urls[0], requestOptions),
-        fetch(urls[1], requestOptions),
-      ])
-        .then((responses) => {
-          return Promise.all(
-            responses.map((response) => {
-              return response.json();
-            })
-          );
-        })
-        .then((data) => {
-          const dependencies = data[0].concat(data[1]);
-          const lastRefreshed = new Date();
-          localStorage.setItem("apiData", JSON.stringify(dependencies));
-          localStorage.setItem(
-            "lastRefreshedAt",
-            lastRefreshed.toLocaleString()
-          );
-          setAllDependencies(dependencies);
-          setLastRefreshedAt(lastRefreshed);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.log(error);
-          setLoading(false);
-        });
+      setAllDependencies(dependencies);
+      setLastRefreshedAt(lastRefreshedAt);
     }
-  };
+
+    setLoading(false);
+  } else {
+    const requestOptions = {
+      method: "GET",
+      redirect: "follow",
+    };
+
+    const urls = [
+      `${process.env.BACKEND_URL}/python-environments`,
+      `${process.env.BACKEND_URL}/node-environments`,
+    ];
+
+    Promise.all([
+      fetch(urls[0], requestOptions),
+      fetch(urls[1], requestOptions),
+    ])
+      .then((responses) => {
+        return Promise.all(
+          responses.map((response) => {
+            return response.json();
+          })
+        );
+      })
+      .then((data) => {
+        const dependencies = data[0].concat(data[1]);
+        const lastRefreshed = new Date();
+        // Store the last refreshed date in ISO format
+        localStorage.setItem("apiData", JSON.stringify(dependencies));
+        localStorage.setItem("lastRefreshedAt", lastRefreshed.toISOString());
+        setAllDependencies(dependencies);
+        setLastRefreshedAt(lastRefreshed);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
+  }
+};
 
   // Filter the dependencies based on the search term
   const filteredDependencies = allDependencies.filter((dependency) =>
