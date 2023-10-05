@@ -20,7 +20,6 @@ export default function DependencyTable() {
   // Function to fetch data from the API
 const fetchApi = (refresh) => {
   setLoading(true);
-  console.log("hi");
   const storedData = localStorage.getItem("apiData");
 
   if (storedData && !refresh) {
