@@ -18,64 +18,64 @@ export default function DependencyTable() {
   }, []);
 
   // Function to fetch data from the API
-const fetchApi = (refresh) => {
-  setLoading(true);
-  const storedData = localStorage.getItem("apiData");
+  const fetchApi = (refresh) => {
+    setLoading(true);
+    const storedData = localStorage.getItem("apiData");
 
-  if (storedData && !refresh) {
-    // Use cached data if available
-    const dependencies = JSON.parse(storedData);
-    const lastRefreshedAtString = localStorage.getItem("lastRefreshedAt");
+    if (storedData && !refresh) {
+      // Use cached data if available
+      const dependencies = JSON.parse(storedData);
+      const lastRefreshedAtString = localStorage.getItem("lastRefreshedAt");
 
-    const lastRefreshedAt = new Date(lastRefreshedAtString);
+      const lastRefreshedAt = new Date(lastRefreshedAtString);
 
-    // Check for an invalid date
-    if (isNaN(lastRefreshedAt)) {
-      console.log("Invalid date format");
-    } else {
-      setAllDependencies(dependencies);
-      setLastRefreshedAt(lastRefreshedAt);
-    }
-
-    setLoading(false);
-  } else {
-    const requestOptions = {
-      method: "GET",
-      redirect: "follow",
-    };
-
-    const urls = [
-      `${process.env.BACKEND_URL}/python-environments`,
-      `${process.env.BACKEND_URL}/node-environments`,
-    ];
-
-    Promise.all([
-      fetch(urls[0], requestOptions),
-      fetch(urls[1], requestOptions),
-    ])
-      .then((responses) => {
-        return Promise.all(
-          responses.map((response) => {
-            return response.json();
-          })
-        );
-      })
-      .then((data) => {
-        const dependencies = data[0].concat(data[1]);
-        const lastRefreshed = new Date();
-        // Store the last refreshed date in ISO format
-        localStorage.setItem("apiData", JSON.stringify(dependencies));
-        localStorage.setItem("lastRefreshedAt", lastRefreshed.toISOString());
+      // Check for an invalid date
+      if (isNaN(lastRefreshedAt)) {
+        console.log("Invalid date format");
+      } else {
         setAllDependencies(dependencies);
-        setLastRefreshedAt(lastRefreshed);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        setLoading(false);
-      });
-  }
-};
+        setLastRefreshedAt(lastRefreshedAt);
+      }
+
+      setLoading(false);
+    } else {
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      };
+
+      const urls = [
+        `${process.env.BACKEND_URL}/python-environments`,
+        `${process.env.BACKEND_URL}/node-environments`,
+      ];
+
+      Promise.all([
+        fetch(urls[0], requestOptions),
+        fetch(urls[1], requestOptions),
+      ])
+        .then((responses) => {
+          return Promise.all(
+            responses.map((response) => {
+              return response.json();
+            })
+          );
+        })
+        .then((data) => {
+          const dependencies = data[0].concat(data[1]);
+          const lastRefreshed = new Date();
+          // Store the last refreshed date in ISO format
+          localStorage.setItem("apiData", JSON.stringify(dependencies));
+          localStorage.setItem("lastRefreshedAt", lastRefreshed.toISOString());
+          setAllDependencies(dependencies);
+          setLastRefreshedAt(lastRefreshed);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setLoading(false);
+        });
+    }
+  };
 
   // Filter the dependencies based on the search term
   const filteredDependencies = allDependencies.filter((dependency) =>
@@ -107,7 +107,7 @@ const fetchApi = (refresh) => {
           </div>
         ) : (
           <>
-            <div className="w-full sm:p-6 ">
+            <div className="w-full sm:p-6">
               <div className="px-4 md:px-10 py-4 md:py-7 bg-gray-100 rounded-tl-lg rounded-tr-lg">
                 <div className="sm:flex items-center justify-between">
                   <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold leading-normal text-gray-800">
@@ -153,88 +153,152 @@ const fetchApi = (refresh) => {
                     </tr>
                   </thead>
                   <tbody className="w-full">
-                    {filteredDependencies.map((dependency) => (
-                      <tr
-                        key={dependency.ID}
-                        className="h-20 text-sm leading-none text-gray-800 bg-white hover:bg-gray-100 border-b border-t border-gray-100"
-                      >
-                        <td className="px-2 cursor-pointer">
-                          <div className="flex items-center">
-                            <div className="w-10 h-10">
-                              <img
-                                className="w-full h-full"
-                                src={
-                                  dependency.Env
-                                    ? "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png"
-                                    : "https://cdn-icons-png.flaticon.com/512/5968/5968322.png"
-                                }
-                                alt="Logo"
-                              />
+                    {filteredDependencies.map((dependency) => {
+                      //count the number of vulnerabilities for each severity
+                      let criticalCount = 0;
+                      let highCount = 0;
+                      let moderateCount = 0;
+                      let lowCount = 0;
+
+                      dependency.Vulnerabilities.forEach((vulnerability) => {
+                        if (vulnerability.Severity === "critical") {
+                          criticalCount++;
+                        } else if (vulnerability.Severity === "high") {
+                          highCount++;
+                        } else if (vulnerability.Severity === "moderate") {
+                          moderateCount++;
+                        } else if (vulnerability.Severity === "low") {
+                          lowCount++;
+                        }
+                      });
+
+                      return (
+                        <tr
+                          key={dependency.ID}
+                          className="h-20 text-sm leading-none text-gray-800 bg-white hover:bg-gray-100 border-b border-t border-gray-100"
+                        >
+                          <td className="px-2 cursor-pointer">
+                            <div className="flex items-center">
+                              <div className="w-12 h-10">
+                                <img
+                                  className="w-full h-full"
+                                  src={
+                                    dependency.Env
+                                      ? "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png"
+                                      : "https://cdn-icons-png.flaticon.com/512/5968/5968322.png"
+                                  }
+                                  alt="Logo"
+                                />
+                              </div>
+                              <div className="px-2 max-w-sm lg:max-w-lg overflow-x-auto overflow-y-hidden">
+                                <p
+                                  className="font-medium"
+                                  onClick={() =>
+                                    navigateToProjectPage(dependency)
+                                  }
+                                >
+                                  {dependency.Path}
+                                </p>
+                              </div>
                             </div>
-                            <div className="px-2">
-                              <p
-                                className="font-medium"
-                                onClick={() =>
-                                  navigateToProjectPage(dependency)
-                                }
-                              >
-                                {dependency.Path}
+                          </td>
+                          <td class="px-6">
+                            <div class="flex justify-center">
+                              <div class="severity-count flex font-medium text-[1rem]">
+                                <div
+                                  class={`count-box ${
+                                    criticalCount == 0
+                                      ? "bg-[#E7E7E7]"
+                                      : "bg-[#be0000]"
+                                  } p-[8px] w-[30px] mr-[1px]`}
+                                >
+                                  <span class="severity-label text-white ml-0">
+                                    C
+                                  </span>
+                                </div>
+                                <div
+                                  class={`critical-count ${
+                                    criticalCount == 0
+                                      ? "bg-[#BEBEBE] text-white"
+                                      : "bg-[#ffd7d4] text-[#be0000]"
+                                  } p-[8px] mr-2 w-9 text-center`}
+                                >
+                                  {criticalCount}
+                                </div>
+                                <div
+                                  class={`count-box ${
+                                    highCount == 0
+                                      ? "bg-[#E7E7E7]"
+                                      : "bg-[#e23a00]"
+                                  } p-[8px] w-[30px] mr-[1px]`}
+                                >
+                                  <span class="severity-label text-white ml-0">
+                                    H
+                                  </span>
+                                </div>
+                                <div
+                                  class={`high-count ${
+                                    highCount == 0
+                                      ? "bg-[#BEBEBE] text-white"
+                                      : "bg-[#fedbc9] text-[#e23a00]"
+                                  } p-[8px] mr-2 w-9 text-center`}
+                                >
+                                  {highCount}
+                                </div>
+                                <div
+                                  class={`count-box ${
+                                    moderateCount == 0
+                                      ? "bg-[#E7E7E7]"
+                                      : "bg-[#e57f01]"
+                                  } p-[8px] w-[30px] mr-[1px]`}
+                                >
+                                  <span class="severity-label text-white ml-0">
+                                    M
+                                  </span>
+                                </div>
+                                <div
+                                  class={`moderate-count ${
+                                    moderateCount == 0
+                                      ? "bg-[#BEBEBE] text-white"
+                                      : "bg-[#ffeacb] text-[#e57f01]"
+                                  } p-[8px] mr-2 w-9 text-center`}
+                                >
+                                  {moderateCount}
+                                </div>
+                                <div
+                                  class={`count-box ${
+                                    lowCount == 0
+                                      ? "bg-[#E7E7E7]"
+                                      : "bg-[#88879E]"
+                                  } p-[8px] w-[30px] mr-[1px]`}
+                                >
+                                  <span class="severity-label text-white ml-0">
+                                    L
+                                  </span>
+                                </div>
+                                <div
+                                  class={`low-count ${
+                                    lowCount == 0
+                                      ? "bg-[#BEBEBE] text-white"
+                                      : "bg-[#EEEEEE] text-[#88879E]"
+                                  } p-[8px] mr-2 w-9 text-center`}
+                                >
+                                  {lowCount}
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+
+                          <td className="px-6">
+                            <div className="flex justify-center">
+                              <p className="text-sm leading-3 text-gray-800 mt-2">
+                                {dependency.Vulnerabilities.length}
                               </p>
                             </div>
-                          </div>
-                        </td>
-                        <td class="px-6">
-                          <div class="flex justify-center">
-                            <div class="severity-count flex">
-                              <div class="count-box bg-[#be0000] p-[8px] w-[24px]">
-                                <span class="severity-label text-white ml-0">
-                                  C
-                                </span>
-                              </div>
-                              <div class="critical-count bg-[#ffd7d4] p-[8px]">
-                                {
-                                  dependency.Vulnerabilities.filter(
-                                    (v) => v.Severity === "critical"
-                                  ).length
-                                }
-                              </div>
-                              <div class="count-box bg-[#e23a00] p-[8px] w-[24px]">
-                                <span class="severity-label text-white ml-0">
-                                  H
-                                </span>
-                              </div>
-                              <div class="high-count bg-[#fedbc9] p-[8px]">
-                                {
-                                  dependency.Vulnerabilities.filter(
-                                    (v) => v.Severity === "high"
-                                  ).length
-                                }
-                              </div>
-                              <div class="count-box bg-[#e57f01] p-[8px] w-[24px]">
-                                <span class="severity-label text-white ml-0">
-                                  M
-                                </span>
-                              </div>
-                              <div class="moderate-count bg-[#ffeacb] p-[8px]">
-                                {
-                                  dependency.Vulnerabilities.filter(
-                                    (v) => v.Severity === "moderate"
-                                  ).length
-                                }
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-
-                        <td className="px-6">
-                          <div className="flex justify-center">
-                            <p className="text-sm leading-3 text-gray-800 mt-2">
-                              {dependency.Vulnerabilities.length}
-                            </p>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
