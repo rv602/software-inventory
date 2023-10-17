@@ -1,31 +1,26 @@
 {
-  "private": true,
   "name": "software-inventory",
-  "description": "My application description",
-  "version": "1.0.0",
-  "author": "R.V.Rajagopalan <rajagopalan602@gmail.com>, Abhinav Pandey <meronaamabhinav@gmail.com>",
-  "main": "app/background.js",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "dev": "nextron",
-    "build": "nextron build",
-    "postinstall": "electron-builder install-app-deps"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "tauri": "tauri",
+    "lint": "next lint"
   },
   "dependencies": {
-    "axios": "^1.4.0",
-    "dotenv": "^16.0.3",
-    "electron-serve": "^1.1.0",
-    "electron-store": "^8.1.0",
-    "react-loader-spinner": "^5.3.4"
+    "next": "13.5.5",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-loader-spinner": "^5.4.5"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.7",
-    "electron": "^21.3.3",
-    "electron-builder": "^23.6.0",
-    "next": "^12.3.4",
-    "nextron": "^8.5.0",
-    "postcss": "^8.4.13",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "tailwindcss": "^3.1.8"
+    "@tauri-apps/cli": "^1.5.2",
+    "autoprefixer": "^10",
+    "eslint": "^8",
+    "eslint-config-next": "13.5.5",
+    "postcss": "^8",
+    "tailwindcss": "^3"
   }
 }
