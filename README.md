@@ -1,6 +1,16 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Abstract
 
-## Getting Started
+With more and more people relying on open-source software, keeping dependencies secure and up to date has become a concern, as any weak spots can be risky. This project introduces a UNIX-based system (for macOS and Linux) that automatically checks project dependencies for vulnerabilities. It stores all the results in a common database for ease of access of specific details such as the types of vulnerabilities, their definitions, references, and remediation actions. Being designed for expansion, the architecture supports monitoring both onsite and offsite, and helps administrators not only efficiently control vulnerabilities but also enhance security management.
+
+## Introduction
+
+The increased reliance on open-source software (OSS) has accelerated software development but also introduced significant security challenges, especially with unpatched flaws in third-party dependencies, which risk software instability and data breaches. Managing these dependencies is complex due to varying library quality and the limitations of existing platform-specific tools.
+
+The proposed system offers a platform-agnostic solution for automated vulnerability detection and monitoring. It scans third-party dependencies to identify security issues, provides critical CVE IDs with fixes, and stores vulnerability data in a centralized database for proactive risk management. Features include a scalable master-slave architecture, robust authentication, and real-time replication to ensure system integrity and facilitate vulnerability resolution.
+
+Backend --> <a href="https://github.com/rv602/software-inventory-api">Repository</a>
+
+## Installation Guide
 
 First, run the development server:
 
@@ -23,18 +33,3 @@ You can start editing the page by modifying `pages/index.js`. The page auto-upda
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
